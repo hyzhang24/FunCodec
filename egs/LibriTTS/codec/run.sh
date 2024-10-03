@@ -12,14 +12,15 @@ feats_dir="."
 exp_dir="."
 dumpdir=dump/LibriTTS
 stage=0
-stop_stage=3
+stop_stage=0
 corpus_dir=corpus/LibriTTS
 
 # training related
 tag=""
 train_set=train
 valid_set=dev
-train_config=conf/encodec_lstm_16k_n32_600k_step_rmseg.yaml
+# train_config=conf/encodec_lstm_16k_n32_600k_step_rmseg.yaml
+train_config=conf/soundstream_16k_n32_600k_step.yaml
 init_param=
 state_dir=LibriTTS_states
 
@@ -74,18 +75,33 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     mkdir -p ${corpus_dir}
   fi
 
-  echo "download training set to ${corpus_dir}"
-  wget --no-check-certificate https://www.openslr.org/resources/60/train-clean-100.tar.gz -P ${corpus_dir}/
-  wget --no-check-certificate https://www.openslr.org/resources/60/train-clean-360.tar.gz -P ${corpus_dir}/
-  wget --no-check-certificate https://www.openslr.org/resources/60/train-other-500.tar.gz -P ${corpus_dir}/
+  # echo "download training set to ${corpus_dir}"
+  # wget --no-check-certificate https://www.openslr.org/resources/60/train-clean-100.tar.gz -P ${corpus_dir}/
+  # wget --no-check-certificate https://www.openslr.org/resources/60/train-clean-360.tar.gz -P ${corpus_dir}/
+  # wget --no-check-certificate https://www.openslr.org/resources/60/train-other-500.tar.gz -P ${corpus_dir}/
+
+  # echo "download dev set to ${corpus_dir}"
+  # wget --no-check-certificate https://www.openslr.org/resources/60/dev-clean.tar.gz -P ${corpus_dir}/
+  # wget --no-check-certificate https://www.openslr.org/resources/60/dev-other.tar.gz -P ${corpus_dir}/
+
+  # echo "download test set to ${corpus_dir}"
+  # wget --no-check-certificate https://www.openslr.org/resources/60/test-clean.tar.gz -P ${corpus_dir}/
+  # wget --no-check-certificate https://www.openslr.org/resources/60/test-other.tar.gz -P ${corpus_dir}/
+
+  # cd ${corpus_dir}/
+  # tar zxf train-clean-100.tar.gz train-clean-360.tar.gz train-other-500.tar.gz
+  # tar zxf dev-clean.tar.gz dev-other.tar.gz
+  # tar zxf test-clean.tar.gz test-other.tar.gz
+
+  # echo "download training set to ${corpus_dir}"
+  # wget --no-check-certificate https://www.openslr.org/resources/60/train-clean-100.tar.gz -P ${corpus_dir}/
+  mv /home/users/ntu/ccdshyzh/datasets/train-clean-100.tar.gz ${corpus_dir}/
 
   echo "download dev set to ${corpus_dir}"
   wget --no-check-certificate https://www.openslr.org/resources/60/dev-clean.tar.gz -P ${corpus_dir}/
-  wget --no-check-certificate https://www.openslr.org/resources/60/dev-other.tar.gz -P ${corpus_dir}/
 
   echo "download test set to ${corpus_dir}"
   wget --no-check-certificate https://www.openslr.org/resources/60/test-clean.tar.gz -P ${corpus_dir}/
-  wget --no-check-certificate https://www.openslr.org/resources/60/test-other.tar.gz -P ${corpus_dir}/
 
   cd ${corpus_dir}/
   tar zxf train-clean-100.tar.gz train-clean-360.tar.gz train-other-500.tar.gz
