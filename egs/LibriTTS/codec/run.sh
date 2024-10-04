@@ -10,10 +10,12 @@ count=1
 # general configuration
 feats_dir="."
 exp_dir="."
-dumpdir=dump/LibriTTS
+# dumpdir=dump/LibriTTS
+dumpdir=/home/users/ntu/ccdshyzh/scratch/dump/LibriTTS
 stage=0
-stop_stage=0
-corpus_dir=corpus/LibriTTS
+stop_stage=3
+# corpus_dir=corpus/LibriTTS
+corpus_dir=/home/users/ntu/ccdshyzh/scratch/corpus/LibriTTS
 
 # training related
 tag=""
@@ -95,18 +97,21 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
   # echo "download training set to ${corpus_dir}"
   # wget --no-check-certificate https://www.openslr.org/resources/60/train-clean-100.tar.gz -P ${corpus_dir}/
-  mv /home/users/ntu/ccdshyzh/datasets/train-clean-100.tar.gz ${corpus_dir}/
+  # mv /home/users/ntu/ccdshyzh/datasets/train-clean-100.tar.gz ${corpus_dir}/
 
-  echo "download dev set to ${corpus_dir}"
-  wget --no-check-certificate https://www.openslr.org/resources/60/dev-clean.tar.gz -P ${corpus_dir}/
+  # echo "download dev set to ${corpus_dir}"
+  # wget --no-check-certificate https://www.openslr.org/resources/60/dev-clean.tar.gz -P ${corpus_dir}/
 
-  echo "download test set to ${corpus_dir}"
-  wget --no-check-certificate https://www.openslr.org/resources/60/test-clean.tar.gz -P ${corpus_dir}/
+  # echo "download test set to ${corpus_dir}"
+  # wget --no-check-certificate https://www.openslr.org/resources/60/test-clean.tar.gz -P ${corpus_dir}/
 
   cd ${corpus_dir}/
-  tar zxf train-clean-100.tar.gz train-clean-360.tar.gz train-other-500.tar.gz
-  tar zxf dev-clean.tar.gz dev-other.tar.gz
-  tar zxf test-clean.tar.gz test-other.tar.gz
+  # tar zxf train-clean-100.tar.gz train-clean-360.tar.gz train-other-500.tar.gz
+  # tar zxf dev-clean.tar.gz dev-other.tar.gz
+  # tar zxf test-clean.tar.gz test-other.tar.gz
+  tar zxf train-clean-100.tar.gz
+  tar zxf dev-clean.tar.gz
+  tar zxf test-clean.tar.gz
 
   # remove the duplicated LibriTTS directory
   mv ${corpus_dir}/LibriTTS/* ${corpus_dir}/
@@ -118,17 +123,20 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
   echo "Stage 1: collecting data sets."
   mkdir -p ${dumpdir}/train_24k ${dumpdir}/dev_24k
 
-  for name in train-clean-100 train-clean-360 train-other-500; do
+  # for name in train-clean-100 train-clean-360 train-other-500; do
+  for name in train-clean-100; do
     echo "collecting ${name} in to ${dumpdir}/train_24k/wav.scp"
     find ${corpus_dir}/${name}/ -iname "*.wav" | awk -F '/' '{print $NF, $0}' | sort >> ${dumpdir}/train_24k/wav.scp
   done
 
-  for name in dev-clean dev-other; do
+  # for name in dev-clean dev-other; do
+  for name in dev-clean; do
     echo "collecting ${name} in to ${dumpdir}/dev_24k/wav.scp"
     find ${corpus_dir}/${name}/ -iname "*.wav" | awk -F '/' '{print $NF, $0}' | sort >> ${dumpdir}/dev_24k/wav.scp
   done
 
-  for name in test-clean test-other; do
+  # for name in test-clean test-other; do
+  for name in test-clean; do
     mkdir -p ${dumpdir}/${name}_24k
     echo "collecting ${name} in to ${dumpdir}/${name}_24k/wav.scp"
     find ${corpus_dir}/${name}/ -iname "*.wav" | awk -F '/' '{print $NF, $0}' | sort > ${dumpdir}/${name}_24k/wav.scp
