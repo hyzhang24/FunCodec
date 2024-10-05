@@ -80,13 +80,8 @@ ngpu=$(echo $gpuid_list | awk -F "," '{print NF}')
 
 echo "inference settings..."
 
-if [[ -n $gpu_inference ]]; then
-    inference_nj=$((ngpu * njob))
-    _ngpu=1
-else
-    inference_nj=$njob
-    _ngpu=0
-fi
+inference_nj=$((ngpu * njob))
+_ngpu=1
 
 echo "start training..."
 # Training Stage
