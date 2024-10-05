@@ -113,7 +113,7 @@ echo "log can be found at ${exp_dir}/exp/${model_dir}/log/train.log.0"
 
 rank=0
 local_rank=0
-gpu_id=$(echo $gpu_devices | cut -d',' -f$[1])
+gpu_id=$(echo $gpu_devices | cut -d',' -f$[$rank+1])
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
@@ -137,7 +137,7 @@ echo gpu_id $gpu_id started
 
 rank=1
 local_rank=1
-gpu_id=$(echo $gpu_devices | cut -d',' -f$[2])
+gpu_id=$(echo $gpu_devices | cut -d',' -f$[$rank+1])
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
