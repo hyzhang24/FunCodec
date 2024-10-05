@@ -45,6 +45,8 @@ use_scale=false
 use_ppg=false
 model_dir=
 
+echo "running run.sh"
+
 . utils/parse_options.sh || exit 1;
 
 # Set bash to 'debug' mode, it will exit on :
