@@ -8,7 +8,7 @@ import logging
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(message)s',  # 只输出日志信息
-    filename='~/FunCodec/egs/LibriTTS/codec/logs.log',  # 指定日志文件路径
+    filename='/home/users/ntu/ccdshyzh/FunCodec/egs/LibriTTS/codec/logs.log',  # 指定日志文件路径
     filemode='w'  # 文件模式，'w' 表示覆盖，'a' 表示追加
 )
 
