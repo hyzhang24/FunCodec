@@ -12,7 +12,7 @@ feats_dir="."
 exp_dir="."
 # dumpdir=dump/LibriTTS
 dumpdir=/home/users/ntu/ccdshyzh/scratch/dump/LibriTTS
-stage=0
+stage=2
 stop_stage=3
 # corpus_dir=corpus/LibriTTS
 corpus_dir=/home/users/ntu/ccdshyzh/scratch/corpus/LibriTTS
@@ -158,7 +158,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     cat ${dumpdir}/${name}/arks/length.*.txt | shuf > exp/${state_dir}/${name}/speech_shape
   done
 
-  for name in test-clean test-other; do
+  for name in test-clean; do
     echo "Resample ${name} set to ${dumpdir}/${name}/wavs/*.wav"
     torchrun --nproc_per_node=32 --master_port=1234 scripts/convert_to_wav.py \
       --wav_scp ${dumpdir}/${name}_24k/wav.scp \
