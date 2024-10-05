@@ -10,7 +10,7 @@ echo "worker start"
 cd $PBS_O_WORKDIR
 module load singularity
 export SINGULARITY_BIND="/home/project:/home/project,/scratch:/scratch,/app:/app"
-singularity run --nv /app/apps/containers/kaldi/kaldi-nvidia-22.04-py3.sif <<
+singularity run --nv /app/apps/containers/kaldi/kaldi-nvidia-22.04-py3.sif << EOF
 source ~/miniconda3/bin/activate ~/miniconda3/envs/haoyang
 
 echo "funcodec run"
@@ -80,7 +80,7 @@ ngpu=$(echo $gpuid_list | awk -F "," '{print NF}')
 
 echo "inference settings..."
 
-if ${gpu_inference}; then
+if [[ -n $gpu_inference ]]; then
     inference_nj=$((ngpu * njob))
     _ngpu=1
 else
