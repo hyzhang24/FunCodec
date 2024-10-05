@@ -13,11 +13,11 @@ count=1
 feats_dir="."
 exp_dir="."
 # dumpdir=dump/LibriTTS
-dumpdir=/home/users/ntu/ccdshyzh/scratch/dump/LibriTTS
+dumpdir=../../../../scratch/dump/LibriTTS
 stage=3
 stop_stage=3
 # corpus_dir=corpus/LibriTTS
-corpus_dir=/home/users/ntu/ccdshyzh/scratch/corpus/LibriTTS
+corpus_dir=../../../../scratch/corpus/LibriTTS
 
 # training related
 tag=""
