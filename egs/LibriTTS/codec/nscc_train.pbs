@@ -68,6 +68,8 @@ set -e
 set -u
 set -o pipefail
 
+echo "model dir settings..."
+
 if [ -z "${model_dir}" ]; then
   model_dir="$(basename "${train_config}" .yaml)${tag}"
 fi
@@ -75,6 +77,8 @@ fi
 # you can set gpu num for decoding here
 gpuid_list=$gpu_devices  # set gpus for decoding, the same as training stage by default
 ngpu=$(echo $gpuid_list | awk -F "," '{print NF}')
+
+echo "inference settings..."
 
 if ${gpu_inference}; then
     inference_nj=$[${ngpu}*${njob}]
@@ -84,6 +88,7 @@ else
     _ngpu=0
 fi
 
+echo "start training..."
 # Training Stage
 world_size=$gpu_num  # run on one machine
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
@@ -134,100 +139,6 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
                 --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.$i 2>&1
         } &
         done
-        wait
-fi
-
-# Testing Stage
-if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
-    echo "stage 4: Inference @ ${bit_width}"
-    for dset in ${test_sets}; do
-        echo "Processing for $dset @ ${bit_width}"
-        asr_exp=${exp_dir}/exp/${model_dir}
-        _dir="${asr_exp}/${inference_tag}/${inference_model}/${dset}"
-        _logdir="${_dir}/logdir"
-        if [ -d ${_dir} ]; then
-            echo "WARNING: ${_dir} is already exists."
-            exit 0
-        fi
-        mkdir -p "${_logdir}"
-        _data="${feats_dir}/${dumpdir}/${dset}"
-        key_file=${_data}/wav.scp
-        num_scp_file="$(<${key_file} wc -l)"
-        _nj=$([ $inference_nj -le $num_scp_file ] && echo "$inference_nj" || echo "$num_scp_file")
-        split_scps=
-        for n in $(seq "${_nj}"); do
-            split_scps+=" ${_logdir}/keys.${n}.scp"
-        done
-        ppg_opt=""
-        if [ ${use_ppg} == true ]; then
-          ppg_opt="--data_path_and_name_and_type ${_data}/ppg.scp,ppg,kaldi_ark"
-        fi
-        # shellcheck disable=SC2086
-        utils/split_scp.pl "${key_file}" ${split_scps}
-        ${infer_cmd} --gpu "${_ngpu}" --max-jobs-run "${_nj}" JOB=1:"${_nj}" "${_logdir}"/inference.JOB.log \
-            python -m funcodec.bin.codec_inference \
-                --batch_size ${batch_size} \
-                --ngpu "${_ngpu}" \
-                --gpuid_list ${gpuid_list} \
-                --data_path_and_name_and_type "${_data}/wav.scp,speech,sound" \
-                --key_file "${_logdir}"/keys.JOB.scp \
-                --config_file "${asr_exp}"/config.yaml \
-                --model_file "${asr_exp}"/"${inference_model}" \
-                --output_dir "${_logdir}"/output.JOB \
-                --sampling_rate $sample_frequency \
-                --file_sampling_rate $file_sampling_rate \
-                --bit_width ${bit_width} \
-                --need_indices ${need_indices} \
-                --need_sub_quants ${need_sub_quants} \
-                --use_scale ${use_scale} ${ppg_opt}
-    done
-fi
-
-# Training Stage
-world_size=$gpu_num  # run on one machine
-if [ ${stage} -le 8 ] && [ ${stop_stage} -ge 8 ]; then
-    echo "stage 8: Training large dataloader"
-    mkdir -p ${exp_dir}/exp/${model_dir}
-    mkdir -p ${exp_dir}/exp/${model_dir}/log
-    INIT_FILE=${exp_dir}/exp/${model_dir}/ddp_init
-    if [ -f $INIT_FILE ];then
-        rm -f $INIT_FILE
-    fi
-    init_opt=""
-    if [ ! -z "${init_param}" ]; then
-        init_opt="--init_param ${init_param}"
-        echo ${init_opt}
-    fi
-
-    init_method=file://$(readlink -f $INIT_FILE)
-    echo "$0: init method is $init_method"
-    for ((i = 0; i < $gpu_num; ++i)); do
-        {
-            rank=$i
-            local_rank=$i
-            gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
-            python -m funcodec.bin.codec_train \
-                --gpu_id $gpu_id \
-                --use_preprocessor false \
-                --dataset_type large \
-                --train_data_file ${feats_dir}/${dumpdir}/${train_set}/data_file.list \
-                --valid_data_file ${feats_dir}/${dumpdir}/${valid_set}/data_file.list \
-                ${init_opt} --ignore_init_mismatch true \
-                --allow_variable_data_keys true \
-                --resume true \
-                --output_dir ${exp_dir}/exp/${model_dir} \
-                --config $train_config \
-                --ngpu $gpu_num \
-                --num_worker_count $count \
-                --multiprocessing_distributed true \
-                --dist_init_method $init_method \
-                --dist_world_size $world_size \
-                --dist_rank $rank \
-                --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.$i 2>&1
-        } &
-        done
-
-        echo "log can be found at ${exp_dir}/exp/${model_dir}/log/train.log.*"
         wait
 fi
 
