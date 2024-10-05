@@ -15,6 +15,6 @@ source ~/miniconda3/bin/activate ~/miniconda3/envs/haoyang
 
 echo "funcodec run"
 
-sh run.sh
+sh nscc_train.sh
 
 EOF
