@@ -5,7 +5,6 @@
 #PBS -l select=1:ncpus=4:ngpus=2
 #PBS -l walltime=00:10:00
 #PBS -j oe
-#PBS -o ~/FunCodec/egs/LibriTTS/codec/logs/output.o
 
 echo "worker start"
 cd $PBS_O_WORKDIR

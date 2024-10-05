@@ -4,8 +4,7 @@
 #PBS -N GPUtest
 #PBS -l select=1:ncpus=4:ngpus=2
 #PBS -l walltime=00:10:00
-#PBS -o ~/FunCodec/egs/LibriTTS/codec/test/output.o
-#PBS -e ~/FunCodec/egs/LibriTTS/codec/test/output.e
+#PBS -j oe
 
 echo "pbs test"
 cd $PBS_O_WORKDIR
