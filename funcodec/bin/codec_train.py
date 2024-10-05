@@ -3,7 +3,14 @@
 import os
 import torch
 from funcodec.tasks.gan_speech_codec import GANSpeechCodecTask
+import logging
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(message)s',  # 只输出日志信息
+    filename='~/FunCodec/egs/LibriTTS/codec/logs.log',  # 指定日志文件路径
+    filemode='w'  # 文件模式，'w' 表示覆盖，'a' 表示追加
+)
 
 # for ASR Training
 def parse_args():
@@ -24,6 +31,7 @@ def main(args=None, cmd=None):
 
 
 if __name__ == '__main__':
+    logging.info("Parsing args...")
     args = parse_args()
 
     # setup local gpu_id
@@ -45,4 +53,5 @@ if __name__ == '__main__':
         if args.batch_bins is not None:
             args.batch_bins = args.batch_bins * args.ngpu
 
+    logging.info("Codec Training Started...")
     main(args=args)
