@@ -61,6 +61,7 @@ class Audio2Mel(nn.Module):
             win_length=self.win_length,
             window=self.window,
             center=False,
+            return_complex=True
         )
         power_spec = torch.sum(torch.pow(fft, 2), dim=[-1])
         mel_output = torch.matmul(self.mel_basis, power_spec)
