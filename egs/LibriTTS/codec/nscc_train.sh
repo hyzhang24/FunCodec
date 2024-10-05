@@ -77,17 +77,11 @@ if [ -f $INIT_FILE ];then
     rm -f $INIT_FILE
 fi
 ppg_opt=""
-if [ ${use_ppg} == true ]; then
-  ppg_opt="
-  --train_data_path_and_name_and_type ${feats_dir}/${dumpdir}/${train_set}/ppg.scp,ppg,kaldi_ark
-  --valid_data_path_and_name_and_type ${feats_dir}/${dumpdir}/${valid_set}/ppg.scp,ppg,kaldi_ark
-  "
-fi
 init_opt=""
-if [ ! -z "${init_param}" ]; then
-    init_opt="--init_param ${init_param}"
-    echo ${init_opt}
-fi
+# if [ ! -z "${init_param}" ]; then
+#     init_opt="--init_param ${init_param}"
+#     echo ${init_opt}
+# fi
 
 init_method=file://$(readlink -f $INIT_FILE)
 echo "log can be found at ${exp_dir}/exp/${model_dir}/log/train.log.0"
@@ -117,6 +111,5 @@ for ((i = 0; i < $gpu_num; ++i)); do
     } &
     done
     wait
-
 
 EOF
