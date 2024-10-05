@@ -7,12 +7,14 @@
 #PBS -j oe
 #PBS -o ~/FunCodec/egs/LibriTTS/codec/logs/output.o
 
-echo "pbs test"
+echo "worker start"
 cd $PBS_O_WORKDIR
 module load singularity
 export SINGULARITY_BIND="/home/project:/home/project,/scratch:/scratch,/app:/app"
 singularity run --nv /app/apps/containers/kaldi/kaldi-nvidia-22.04-py3.sif << EOF
 source ~/miniconda3/bin/activate ~/miniconda3/envs/haoyang
+
+echo "funcodec run"
 
 . ./path.sh || exit 1;
 
