@@ -2,7 +2,7 @@
 
 #PBS -q normal
 #PBS -N funcodec_test
-#PBS -l select=1:ncpus=4:ngpus=4
+#PBS -l select=1:ncpus=16:ngpus=4
 #PBS -l walltime=119:59:00
 #PBS -j oe
 

@@ -7,7 +7,7 @@ echo "funcodec run"
 # machines configuration
 gpu_devices="0,1,2,3"
 gpu_num=4
-count=1
+count=4
 
 # general configuration
 feats_dir="."
