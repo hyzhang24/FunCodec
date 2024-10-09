@@ -5,8 +5,8 @@ echo "funcodec run"
 . ./path.sh || exit 1;
 
 # machines configuration
-gpu_devices="0,1"
-gpu_num=2
+gpu_devices="0,1,2,3"
+gpu_num=4
 count=1
 
 # general configuration
@@ -111,9 +111,10 @@ echo "log can be found at ${exp_dir}/exp/${model_dir}/log/train.log.0"
 #     } &
 #     done
 
-rank=0
-local_rank=0
-gpu_id=$(echo $gpu_devices | cut -d',' -f1)
+i=0
+rank=$i
+local_rank=$i
+gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
@@ -131,13 +132,14 @@ nohup python -m funcodec.bin.codec_train \
     --dist_init_method $init_method \
     --dist_world_size $world_size \
     --dist_rank $rank \
-    --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.0 2>&1 &
+    --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.$i 2>&1 &
 
 echo gpu_id $gpu_id started
 
-rank=1
-local_rank=1
-gpu_id=$(echo $gpu_devices | cut -d',' -f2)
+i=1
+rank=$i
+local_rank=$i
+gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
@@ -155,9 +157,60 @@ nohup python -m funcodec.bin.codec_train \
     --dist_init_method $init_method \
     --dist_world_size $world_size \
     --dist_rank $rank \
-    --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.1 2>&1 &
+    --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.$i 2>&1 &
+
+echo gpu_id $gpu_id started
+
+i=2
+rank=$i
+local_rank=$i
+gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
+nohup python -m funcodec.bin.codec_train \
+    --gpu_id $gpu_id \
+    --use_preprocessor true \
+    --train_data_path_and_name_and_type ${feats_dir}/${dumpdir}/${train_set}/wav.scp,speech,kaldi_ark \
+    --train_shape_file ${feats_dir}/exp/${state_dir}/${train_set}/speech_shape \
+    --valid_data_path_and_name_and_type ${feats_dir}/${dumpdir}/${valid_set}/wav.scp,speech,kaldi_ark \
+    --valid_shape_file ${feats_dir}/exp/${state_dir}/${valid_set}/speech_shape \
+    ${init_opt} --ignore_init_mismatch true \
+    ${ppg_opt} --resume true \
+    --output_dir ${exp_dir}/exp/${model_dir} \
+    --config $train_config \
+    --ngpu $gpu_num \
+    --num_worker_count $count \
+    --multiprocessing_distributed true \
+    --dist_init_method $init_method \
+    --dist_world_size $world_size \
+    --dist_rank $rank \
+    --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.$i 2>&1 &
+
+echo gpu_id $gpu_id started
+
+i=3
+rank=$i
+local_rank=$i
+gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
+nohup python -m funcodec.bin.codec_train \
+    --gpu_id $gpu_id \
+    --use_preprocessor true \
+    --train_data_path_and_name_and_type ${feats_dir}/${dumpdir}/${train_set}/wav.scp,speech,kaldi_ark \
+    --train_shape_file ${feats_dir}/exp/${state_dir}/${train_set}/speech_shape \
+    --valid_data_path_and_name_and_type ${feats_dir}/${dumpdir}/${valid_set}/wav.scp,speech,kaldi_ark \
+    --valid_shape_file ${feats_dir}/exp/${state_dir}/${valid_set}/speech_shape \
+    ${init_opt} --ignore_init_mismatch true \
+    ${ppg_opt} --resume true \
+    --output_dir ${exp_dir}/exp/${model_dir} \
+    --config $train_config \
+    --ngpu $gpu_num \
+    --num_worker_count $count \
+    --multiprocessing_distributed true \
+    --dist_init_method $init_method \
+    --dist_world_size $world_size \
+    --dist_rank $rank \
+    --local_rank $local_rank 1> ${exp_dir}/exp/${model_dir}/log/train.log.$i 2>&1 &
+
+echo gpu_id $gpu_id started
+
 wait
-
-echo gpu_id $gpu_id started
 
 EOF

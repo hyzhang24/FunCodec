@@ -2,8 +2,8 @@
 
 #PBS -q normal
 #PBS -N funcodec_test
-#PBS -l select=1:ncpus=4:ngpus=2
-#PBS -l walltime=00:10:00
+#PBS -l select=1:ncpus=4:ngpus=4
+#PBS -l walltime=119:59:00
 #PBS -j oe
 
 echo "worker start"
