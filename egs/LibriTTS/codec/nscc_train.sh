@@ -7,7 +7,7 @@ echo "funcodec run"
 # machines configuration
 gpu_devices="0,1,2,3"
 gpu_num=4
-count=4
+count=1
 
 # general configuration
 feats_dir="."
@@ -114,7 +114,7 @@ echo "log can be found at ${exp_dir}/exp/${model_dir}/log/train.log.0"
 i=0
 rank=$i
 local_rank=$i
-gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
+gpu_id=$(echo $gpu_devices | cut -d',' -f$((i+1)))
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
@@ -139,7 +139,7 @@ echo gpu_id $gpu_id started
 i=1
 rank=$i
 local_rank=$i
-gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
+gpu_id=$(echo $gpu_devices | cut -d',' -f$((i+1)))
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
@@ -164,7 +164,7 @@ echo gpu_id $gpu_id started
 i=2
 rank=$i
 local_rank=$i
-gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
+gpu_id=$(echo $gpu_devices | cut -d',' -f$((i+1)))
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
@@ -189,7 +189,7 @@ echo gpu_id $gpu_id started
 i=3
 rank=$i
 local_rank=$i
-gpu_id=$(echo $gpu_devices | cut -d',' -f$[$i+1])
+gpu_id=$(echo $gpu_devices | cut -d',' -f$((i+1)))
 nohup python -m funcodec.bin.codec_train \
     --gpu_id $gpu_id \
     --use_preprocessor true \
