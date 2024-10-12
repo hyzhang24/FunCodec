@@ -1,0 +1,89 @@
+/home/users/ntu/ccdshyzh/miniconda3/envs/haoyang/bin/python /home/users/ntu/ccdshyzh/FunCodec/funcodec/bin/codec_train.py --gpu_id 2 --use_preprocessor true --train_data_path_and_name_and_type ./../../../../scratch/dump/LibriTTS/train/wav.scp,speech,kaldi_ark --train_shape_file ./exp/LibriTTS_states/train/speech_shape --valid_data_path_and_name_and_type ./../../../../scratch/dump/LibriTTS/dev/wav.scp,speech,kaldi_ark --valid_shape_file ./exp/LibriTTS_states/dev/speech_shape --ignore_init_mismatch true --resume true --output_dir ./exp/soundstream_16k_n32_600k_step --config conf/soundstream_16k_n32_600k_step.yaml --ngpu 4 --num_worker_count 1 --multiprocessing_distributed true --dist_init_method file:///home/users/ntu/ccdshyzh/FunCodec/egs/LibriTTS/codec/exp/soundstream_16k_n32_600k_step/ddp_init --dist_world_size 4 --dist_rank 2 --local_rank 2
+[W1009 17:07:27.069825136 Utils.hpp:164] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function operator())
+/home/users/ntu/ccdshyzh/miniconda3/envs/haoyang/lib/python3.9/site-packages/torch/nn/utils/weight_norm.py:134: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+x1000c1s3b0n1:2169393:2169393 [2] NCCL INFO cudaDriverVersion 12020
+x1000c1s3b0n1:2169393:2169393 [2] NCCL INFO Bootstrap : Using hsn0:10.150.0.46<0>
+x1000c1s3b0n1:2169393:2169393 [2] NCCL INFO NET/Plugin: Failed to find ncclNetPlugin_v8 symbol.
+x1000c1s3b0n1:2169393:2169393 [2] NCCL INFO NET/Plugin: Failed to find ncclNetPlugin symbol (>= v5). ncclNetPlugin symbols v4 and lower are not supported.
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/RoCE [1]mlx5_1:1/RoCE [RO]; OOB hsn0:10.150.0.46<0>
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Using non-device net plugin version 0
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Using network IB
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO comm 0x7c94fd0 rank 2 nranks 4 cudaDev 2 nvmlDev 0 busId 3000 commId 0x1d7964ff430bf90 - Init START
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Setting affinity for GPU 0 to ffff0000,00000000,ffff0000,00000000
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO NVLS multicast support is not available on dev 2
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO comm 0x7c94fd0 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1 [4] 1/-1/-1->2->0 [5] 1/-1/-1->2->0 [6] 1/-1/-1->2->0 [7] 1/-1/-1->2->0 [8] -1/-1/-1->2->3 [9] -1/-1/-1->2->3 [10] -1/-1/-1->2->3 [11] -1/-1/-1->2->3 [12] 3/-1/-1->2->1 [13] 3/-1/-1->2->1 [14] 3/-1/-1->2->1 [15] 3/-1/-1->2->1 [16] 1/-1/-1->2->0 [17] 1/-1/-1->2->0 [18] 1/-1/-1->2->0 [19] 1/-1/-1->2->0 [20] -1/-1/-1->2->3 [21] -1/-1/-1->2->3 [22] -1/-1/-1->2->3 [23] -1/-1/-1->2->3
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO P2P Chunksize set to 524288
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 00/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 02/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 06/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 08/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 12/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 14/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 18/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 20/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 01/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 04/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 07/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 10/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 13/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 16/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 19/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 22/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 03/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 05/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 09/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 11/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 15/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 17/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 21/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 23/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Connected all rings
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 01/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 03/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 09/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 10/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 11/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 13/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 15/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 21/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 22/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 23/0 : 2[0] -> 3[2] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 05/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 06/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 17/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 18/0 : 2[0] -> 0[1] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 00/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 01/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 02/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 04/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 06/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 07/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 12/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 13/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 14/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 16/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 18/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Channel 19/0 : 2[0] -> 1[3] via P2P/CUMEM/read
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO Connected all trees
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO 24 coll channels, 0 collnet channels, 0 nvls channels, 32 p2p channels, 8 p2p channels per peer
+x1000c1s3b0n1:2169393:2170232 [2] NCCL INFO comm 0x7c94fd0 rank 2 nranks 4 cudaDev 2 nvmlDev 0 busId 3000 commId 0x1d7964ff430bf90 - Init COMPLETE
+[rank2]:[W1009 17:07:39.961325420 Utils.hpp:110] Warning: Environment variable NCCL_BLOCKING_WAIT is deprecated; use TORCH_NCCL_BLOCKING_WAIT instead (function operator())
+Number of CUDA devices: 4
+Device 0: NVIDIA A100-SXM4-40GB
+  Compute Capability: 8.0
+  Total Memory: 39.56 GB
+Device 1: NVIDIA A100-SXM4-40GB
+  Compute Capability: 8.0
+  Total Memory: 39.56 GB
+Device 2: NVIDIA A100-SXM4-40GB
+  Compute Capability: 8.0
+  Total Memory: 39.56 GB
+Device 3: NVIDIA A100-SXM4-40GB
+  Compute Capability: 8.0
+  Total Memory: 39.56 GB
+/home/users/ntu/ccdshyzh/FunCodec/funcodec/train/gan_trainer.py:183: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(scaler is not None):
+[rank2]:[W1009 17:07:46.482624766 reducer.cpp:1400] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())

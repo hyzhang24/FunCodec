@@ -1,0 +1,58 @@
+worker start
+
+===========
+== Kaldi ==
+===========
+
+NVIDIA Release 22.04 (build 34850676)
+Kaldi Version 5.5
+
+Container image Copyright (c) 2022, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Copyright 2015-2022, Kaldi contributors.  All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+funcodec run
+funcodec run
+model dir settings...
+inference settings...
+start training...
+stage 3: Training
+log can be found at ./exp/soundstream_16k_n32_600k_step/log/train.log.0
+gpu_id 0 started
+gpu_id 1 started
+gpu_id 2 started
+gpu_id 3 started
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			Resource Usage on 2024-10-13 01:19:55.314741:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	JobId: 8320787.pbs101
+	Project: personal-ccdshyzh
+	Exit Status: 271
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	NCPUs: Requested(64), Used(64)
+	CPU Time Used: 192:48:04
+	Memory: Requested(440gb), Used(21427068kb)
+	Vmem Used: 2080032220kb
+	Walltime: Requested(119:59:00), Used(80:12:43)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Execution Nodes Used: (x1000c1s3b0n1:ncpus=64:ngpus=4:mem=461373440kb)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	GPU Duration: 80.21hrs
+	GPU Power Consumed: 186.37W
+	GPU Max GPU Memory Used: 88.55GB
+	Memory Throughput Rate (Average): x1000c1s3b0n1:(gpu1:30%+gpu3:30%+gpu0:30%+gpu2:30%)
+	Memory Throughput Rate (Max): x1000c1s3b0n1:(gpu1:100%+gpu3:100%+gpu0:100%+gpu2:100%)
+	Memory Throughput Rate (Min): x1000c1s3b0n1:(gpu1:0%+gpu3:0%+gpu0:0%+gpu2:0%)
+	GPU SM Utilization (Average): x1000c1s3b0n1:(gpu1:63%+gpu3:63%+gpu0:64%+gpu2:64%)
+	GPU SM Utilization (Max): x1000c1s3b0n1:(gpu1:100%+gpu3:100%+gpu0:100%+gpu2:100%)
+	GPU SM Utilization (Min): x1000c1s3b0n1:(gpu1:0%+gpu3:0%+gpu0:0%+gpu2:0%)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Warning: None
+GPU application profile: Medium
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
