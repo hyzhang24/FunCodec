@@ -66,10 +66,10 @@ class Audio2Mel(nn.Module):
         power_spec = torch.sum(torch.pow(fft, 2), dim=[-1])
         # refactor
         # power_spec_t = power_spec.t()
-        print(f"self.mel_basis.shape = {self.mel_basis.shape}")
-        print(f"self.mel_basis.dtype = {self.mel_basis.dtype}")
-        print(f"power_spec.shape = {power_spec.shape}")
-        print(f"power_spec.dtype = {power_spec.dtype}")
+        # print(f"self.mel_basis.shape = {self.mel_basis.shape}")
+        # print(f"self.mel_basis.dtype = {self.mel_basis.dtype}")
+        # print(f"power_spec.shape = {power_spec.shape}")
+        # print(f"power_spec.dtype = {power_spec.dtype}")
         mel_output = torch.matmul(self.mel_basis, power_spec)
         log_mel_spec = torch.log10(torch.clamp(mel_output, min=1e-5))
         if return_power_spec:
