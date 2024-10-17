@@ -24,7 +24,7 @@ tag=""
 train_set=train
 valid_set=dev
 # train_config=conf/encodec_lstm_16k_n32_600k_step_rmseg.yaml
-train_config=conf/soundstream_16k_n32_600k_step.yaml
+train_config=conf/soundstream_noncasual_16k_n4_600k_step.yaml
 init_param=
 state_dir=LibriTTS_states
 
