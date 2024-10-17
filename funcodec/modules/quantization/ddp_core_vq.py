@@ -371,7 +371,7 @@ class DistributedResidualVectorQuantization(nn.Module):
 
         self.quantize_dropout = quantize_dropout
         self.rand_num_quant = rand_num_quant
-        print(f"core_vq ddp init finished, q0_ds_ratio={self.q0_ds_ratio}")
+        # print(f"core_vq ddp init finished, q0_ds_ratio={self.q0_ds_ratio}")
 
     def forward(self, x, n_q: tp.Optional[int] = None):
         quantized_out = torch.zeros_like(x)
@@ -404,7 +404,7 @@ class DistributedResidualVectorQuantization(nn.Module):
         layer = self.layers[0]
         for i in range(n_q):
             quant_in = residual
-            print(f"using vq_ddp, n_q={n_q}, self.q0_ds_ratio={self.q0_ds_ratio}")
+            # print(f"using vq_ddp, n_q={n_q}, self.q0_ds_ratio={self.q0_ds_ratio}")
             # if self.q0_ds_ratio > 1 and quantizer_index == 0:
             if self.q0_ds_ratio > 1 and i == 0:
                 quant_in = F.interpolate(quant_in, size=[tt//2])

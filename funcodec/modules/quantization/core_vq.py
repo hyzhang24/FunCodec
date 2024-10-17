@@ -340,7 +340,7 @@ class ResidualVectorQuantization(nn.Module):
         )
         self.quantize_dropout = quantize_dropout
         self.rand_num_quant = rand_num_quant
-        print("Core_vq:RVQ init finished")
+        # print("Core_vq:RVQ init finished")
 
     def forward(self, x, n_q: tp.Optional[int] = None):
         quantized_out = 0.0
