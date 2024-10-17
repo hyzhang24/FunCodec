@@ -341,13 +341,18 @@ class DistributedResidualVectorQuantization(nn.Module):
         """
         codebook_size, codebook_dim = kwargs["codebook_size"], kwargs["dim"]
         kmeans_init = kwargs["kmeans_init"]
+        # refactor
         if not kwargs["kmeans_init"]:
-            embed = uniform_init(num_quantizers, codebook_size, codebook_dim)
+            # embed = uniform_init(num_quantizers, codebook_size, codebook_dim)
+            embed = uniform_init(1, codebook_size, codebook_dim)
         else:
-            embed = torch.zeros(num_quantizers, codebook_size, codebook_dim)
+            # embed = torch.zeros(num_quantizers, codebook_size, codebook_dim)
+            embed = torch.zeros(1, codebook_size, codebook_dim)
 
-        self.register_buffer("inited", torch.Tensor([[not kmeans_init] for _ in range(num_quantizers)]))
-        self.register_buffer("cluster_size", torch.zeros(num_quantizers, codebook_size))
+        # self.register_buffer("inited", torch.Tensor([[not kmeans_init] for _ in range(num_quantizers)]))
+        # self.register_buffer("cluster_size", torch.zeros(num_quantizers, codebook_size))
+        self.register_buffer("inited", torch.Tensor([[not kmeans_init] for _ in range(1)]))
+        self.register_buffer("cluster_size", torch.zeros(1, codebook_size))
         self.register_buffer("embed", embed)
         self.register_buffer("embed_avg", embed.clone())
 
@@ -355,14 +360,18 @@ class DistributedResidualVectorQuantization(nn.Module):
         if "q0_ds_ratio" in kwargs:
             self.q0_ds_ratio = kwargs.pop("q0_ds_ratio")
 
+        # refactor
         self.layers = nn.ModuleList()
-        for i in range(num_quantizers):
-            vq_args = dict(**kwargs)
-            vq = VectorQuantization(**vq_args)
-            self.layers.append(vq)
+        vq_args = dict(**kwargs)
+        self.layers = nn.ModuleList([VectorQuantization(**vq_args)])
+        # for i in range(num_quantizers):
+        #     vq_args = dict(**kwargs)
+        #     vq = VectorQuantization(**vq_args)
+        #     self.layers.append(vq)
 
         self.quantize_dropout = quantize_dropout
         self.rand_num_quant = rand_num_quant
+        print(f"core_vq ddp init finished, q0_ds_ratio={self.q0_ds_ratio}")
 
     def forward(self, x, n_q: tp.Optional[int] = None):
         quantized_out = torch.zeros_like(x)
@@ -375,33 +384,44 @@ class DistributedResidualVectorQuantization(nn.Module):
         all_sub_quants = []
         n_q = n_q or len(self.layers)
 
-        should_quantize_dropout = self.training and self.quantize_dropout and self.rand_num_quant is not None
-        if should_quantize_dropout:
-            rand_quantize_dropout_index = random.choice(self.rand_num_quant)
+        # refactor
+        # should_quantize_dropout = self.training and self.quantize_dropout and self.rand_num_quant is not None
+        # if should_quantize_dropout:
+        #     rand_quantize_dropout_index = random.choice(self.rand_num_quant)
 
-            null_indices_shape = (x.shape[0], x.shape[2])
-            null_indices = torch.full(null_indices_shape, -1., device=device, dtype=torch.long)
-            null_loss = torch.full((1,), 0., device=device, dtype=x.dtype)
-            null_sub_quant = torch.full(x.shape, -1, device=device, dtype=x.dtype)
+        #     null_indices_shape = (x.shape[0], x.shape[2])
+        #     null_indices = torch.full(null_indices_shape, -1., device=device, dtype=torch.long)
+        #     null_loss = torch.full((1,), 0., device=device, dtype=x.dtype)
+        #     null_sub_quant = torch.full(x.shape, -1, device=device, dtype=x.dtype)
 
-        for quantizer_index, layer in enumerate(self.layers[:n_q]):
-            # dropout except the first quantizer
-            if should_quantize_dropout and quantizer_index >= rand_quantize_dropout_index:
-                all_indices.append(null_indices)
-                all_losses.append(null_loss)
-                all_sub_quants.append(null_sub_quant)
-                continue
-
+        # for quantizer_index, layer in enumerate(self.layers[:n_q]):
+        #     # dropout except the first quantizer
+        #     if should_quantize_dropout and quantizer_index >= rand_quantize_dropout_index:
+        #         all_indices.append(null_indices)
+        #         all_losses.append(null_loss)
+        #         all_sub_quants.append(null_sub_quant)
+        #         continue
+        layer = self.layers[0]
+        for i in range(n_q):
             quant_in = residual
-            if self.q0_ds_ratio > 1 and quantizer_index == 0:
+            print(f"using vq_ddp, n_q={n_q}, self.q0_ds_ratio={self.q0_ds_ratio}")
+            # if self.q0_ds_ratio > 1 and quantizer_index == 0:
+            if self.q0_ds_ratio > 1 and i == 0:
                 quant_in = F.interpolate(quant_in, size=[tt//2])
+            # quantized, indices, loss = layer(quant_in, [
+            #     self.inited[quantizer_index],
+            #     self.cluster_size[quantizer_index],
+            #     self.embed[quantizer_index],
+            #     self.embed_avg[quantizer_index]
+            # ])
             quantized, indices, loss = layer(quant_in, [
-                self.inited[quantizer_index],
-                self.cluster_size[quantizer_index],
-                self.embed[quantizer_index],
-                self.embed_avg[quantizer_index]
+                self.inited[0],
+                self.cluster_size[0],
+                self.embed[0],
+                self.embed_avg[0]
             ])
-            if self.q0_ds_ratio > 1 and quantizer_index == 0:
+            # if self.q0_ds_ratio > 1 and quantizer_index == 0:
+            if self.q0_ds_ratio > 1 and i == 0:
                 quantized = F.interpolate(quantized, size=[tt])
                 indices = F.interpolate(indices.unsqueeze(1).float(), size=[tt]).squeeze(1).long()
             residual = residual - quantized
@@ -421,33 +441,62 @@ class DistributedResidualVectorQuantization(nn.Module):
         residual = x
         all_indices = []
         n_q = n_q or len(self.layers)
-        for i, layer in enumerate(self.layers[:n_q]):
+        # refactor
+        # for i, layer in enumerate(self.layers[:n_q]):
+        #     indices = layer.encode(residual, [
+        #         self.inited[i],
+        #         self.cluster_size[i],
+        #         self.embed[i],
+        #         self.embed_avg[i]
+        #     ])
+        #     quantized = layer.decode(indices, [
+        #         self.inited[i],
+        #         self.cluster_size[i],
+        #         self.embed[i],
+        #         self.embed_avg[i]
+        #     ])
+        #     residual = residual - quantized
+        #     all_indices.append(indices)
+        layer = self.layers[0]
+        for _ in range(n_q):
             indices = layer.encode(residual, [
-                self.inited[i],
-                self.cluster_size[i],
-                self.embed[i],
-                self.embed_avg[i]
+                self.inited[0],
+                self.cluster_size[0],
+                self.embed[0],
+                self.embed_avg[0]
             ])
             quantized = layer.decode(indices, [
-                self.inited[i],
-                self.cluster_size[i],
-                self.embed[i],
-                self.embed_avg[i]
+                self.inited[0],
+                self.cluster_size[0],
+                self.embed[0],
+                self.embed_avg[0]
             ])
             residual = residual - quantized
             all_indices.append(indices)
+
         out_indices = torch.stack(all_indices)
         return out_indices
 
     def decode(self, q_indices: torch.Tensor) -> torch.Tensor:
         quantized_out = torch.tensor(0.0, device=q_indices.device)
+        # refactor
+        # for i, indices in enumerate(q_indices):
+        #     layer = self.layers[i]
+        #     quantized = layer.decode(indices, [
+        #         self.inited[i],
+        #         self.cluster_size[i],
+        #         self.embed[i],
+        #         self.embed_avg[i]
+        #     ])
+        #     quantized_out = quantized_out + quantized
+
+        layer = self.layers[0]
         for i, indices in enumerate(q_indices):
-            layer = self.layers[i]
             quantized = layer.decode(indices, [
-                self.inited[i],
-                self.cluster_size[i],
-                self.embed[i],
-                self.embed_avg[i]
+                self.inited[0],
+                self.cluster_size[0],
+                self.embed[0],
+                self.embed_avg[0]
             ])
             quantized_out = quantized_out + quantized
         return quantized_out

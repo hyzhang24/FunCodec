@@ -331,11 +331,16 @@ class ResidualVectorQuantization(nn.Module):
                  rand_num_quant: tp.Optional[tp.List] = None,
                  **kwargs):
         super().__init__()
+        # refactor
+        # self.layers = nn.ModuleList(
+        #     [VectorQuantization(**kwargs) for _ in range(num_quantizers)]
+        # )
         self.layers = nn.ModuleList(
-            [VectorQuantization(**kwargs) for _ in range(num_quantizers)]
+            [VectorQuantization(**kwargs)]
         )
         self.quantize_dropout = quantize_dropout
         self.rand_num_quant = rand_num_quant
+        print("Core_vq:RVQ init finished")
 
     def forward(self, x, n_q: tp.Optional[int] = None):
         quantized_out = 0.0
@@ -347,23 +352,35 @@ class ResidualVectorQuantization(nn.Module):
         all_sub_quants = []
         n_q = n_q or len(self.layers)
 
-        should_quantize_dropout = self.training and self.quantize_dropout and self.rand_num_quant is not None
-        if should_quantize_dropout:
-            rand_quantize_dropout_index = random.choice(self.rand_num_quant)
+        # refactor:这里train的时候的trick随机dropout掉一些codebook，我们改成单码本结构，不需要dropout了，暂时注释掉
+        # should_quantize_dropout = self.training and self.quantize_dropout and self.rand_num_quant is not None
+        # if should_quantize_dropout:
+        #     rand_quantize_dropout_index = random.choice(self.rand_num_quant)
 
-            null_indices_shape = (x.shape[0], x.shape[2])
-            null_indices = torch.full(null_indices_shape, -1., device=device, dtype=torch.long)
-            null_loss = torch.full((1,), 0., device=device, dtype=x.dtype)
-            null_sub_quant = torch.full(x.shape, -1, device=device, dtype=x.dtype)
+        #     null_indices_shape = (x.shape[0], x.shape[2])
+        #     null_indices = torch.full(null_indices_shape, -1., device=device, dtype=torch.long)
+        #     null_loss = torch.full((1,), 0., device=device, dtype=x.dtype)
+        #     null_sub_quant = torch.full(x.shape, -1, device=device, dtype=x.dtype)
 
-        for quantizer_index, layer in enumerate(self.layers[:n_q]):
-            # dropout except the first quantizer
-            if should_quantize_dropout and quantizer_index > 0 and quantizer_index > rand_quantize_dropout_index:
-                all_indices.append(null_indices)
-                all_losses.append(null_loss)
-                all_sub_quants.append(null_sub_quant)
-                continue
+        # refactor:对单码本做n_q次vq
+        # for quantizer_index, layer in enumerate(self.layers[:n_q]):
+        #     # dropout except the first quantizer
+        #     if should_quantize_dropout and quantizer_index > 0 and quantizer_index > rand_quantize_dropout_index:
+        #         all_indices.append(null_indices)
+        #         all_losses.append(null_loss)
+        #         all_sub_quants.append(null_sub_quant)
+        #         continue
 
+        #     quantized, indices, loss = layer(residual)
+        #     residual = residual - quantized
+        #     quantized_out = quantized_out + quantized
+
+        #     all_indices.append(indices)
+        #     all_losses.append(loss)
+        #     all_sub_quants.append(quantized)
+        
+        layer = self.layers[0]
+        for _ in range(n_q):
             quantized, indices, loss = layer(residual)
             residual = residual - quantized
             quantized_out = quantized_out + quantized
@@ -379,7 +396,15 @@ class ResidualVectorQuantization(nn.Module):
         residual = x
         all_indices = []
         n_q = n_q or len(self.layers)
-        for layer in self.layers[:n_q]:
+        # refactor
+        # for layer in self.layers[:n_q]:
+        #     indices = layer.encode(residual)
+        #     quantized = layer.decode(indices)
+        #     residual = residual - quantized
+        #     all_indices.append(indices)
+
+        layer = self.layers[0]
+        for _ in range(n_q):
             indices = layer.encode(residual)
             quantized = layer.decode(indices)
             residual = residual - quantized
@@ -389,8 +414,10 @@ class ResidualVectorQuantization(nn.Module):
 
     def decode(self, q_indices: torch.Tensor) -> torch.Tensor:
         quantized_out = torch.tensor(0.0, device=q_indices.device)
+        #refactor
+        layer = self.layers[0]
         for i, indices in enumerate(q_indices):
-            layer = self.layers[i]
+            # layer = self.layers[i]
             quantized = layer.decode(indices)
             quantized_out = quantized_out + quantized
         return quantized_out
