@@ -25,7 +25,7 @@ quantizer_conf:
     kmeans_init: true
     sampling_rate: 16000
     quantize_dropout: false
-    rand_num_quant: [1, 2, 4, 8, 16, 32]
+    rand_num_quant: [1, 2, 4]
     use_ddp: true
     encoder_hop_length: 320
 
