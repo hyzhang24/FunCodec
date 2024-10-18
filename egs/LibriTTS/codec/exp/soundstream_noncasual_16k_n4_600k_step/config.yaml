@@ -160,9 +160,6 @@ quantizer_conf:
     - 1
     - 2
     - 4
-    - 8
-    - 16
-    - 32
     use_ddp: true
     encoder_hop_length: 320
 decoder: encodec_seanet_decoder

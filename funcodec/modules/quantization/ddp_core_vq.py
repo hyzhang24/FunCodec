@@ -346,7 +346,7 @@ class DistributedResidualVectorQuantization(nn.Module):
         if "q0_ds_ratio" in kwargs:
             self.q0_ds_ratio = kwargs.pop("q0_ds_ratio")
         
-        self.use_srvq = kwargs["use_srvq"]
+        self.use_srvq = kwargs.pop("use_srvq")
         if self.use_srvq:
             if not kwargs["kmeans_init"]:
                 embed = uniform_init(1, codebook_size, codebook_dim)
