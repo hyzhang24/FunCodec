@@ -81,7 +81,7 @@ class ResidualVectorQuantizer(nn.Module):
             quantize_dropout=quantize_dropout,
             rand_num_quant=rand_num_quant,
             q0_ds_ratio=q0_ds_ratio,
-            use_srvq=False,
+            use_srvq=True,
         )
 
     def forward(self, x: torch.Tensor, sample_rate: int, bandwidth: tp.Optional[float] = None) -> QuantizedResult:
